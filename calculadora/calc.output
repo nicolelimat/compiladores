@@ -1,0 +1,283 @@
+Grammar
+
+    0 $accept: linha $end
+
+    1 linha: linha comando ENTER
+    2      | /* empty */
+
+    3 comando: expr
+    4        | VAR RECEBE expr
+
+    5 expr: NUM
+    6     | VAR
+    7     | expr MAIS expr
+    8     | expr MENOS expr
+    9     | expr VEZES expr
+   10     | expr DIV expr
+   11     | ABRE expr FECHA
+
+
+Terminals, with rules where they appear
+
+$end (0) 0
+error (256)
+NUM (258) 5
+VAR (259) 4 6
+RECEBE (260) 4
+MAIS (261) 7
+MENOS (262) 8
+VEZES (263) 9
+DIV (264) 10
+ABRE (265) 11
+FECHA (266) 11
+ENTER (267) 1
+
+
+Nonterminals, with rules where they appear
+
+$accept (13)
+    on left: 0
+linha (14)
+    on left: 1 2, on right: 0 1
+comando (15)
+    on left: 3 4, on right: 1
+expr (16)
+    on left: 5 6 7 8 9 10 11, on right: 3 4 7 8 9 10 11
+
+
+state 0
+
+    0 $accept: . linha $end
+
+    $default  reduce using rule 2 (linha)
+
+    linha  go to state 1
+
+
+state 1
+
+    0 $accept: linha . $end
+    1 linha: linha . comando ENTER
+
+    $end  shift, and go to state 2
+    NUM   shift, and go to state 3
+    VAR   shift, and go to state 4
+    ABRE  shift, and go to state 5
+
+    comando  go to state 6
+    expr     go to state 7
+
+
+state 2
+
+    0 $accept: linha $end .
+
+    $default  accept
+
+
+state 3
+
+    5 expr: NUM .
+
+    $default  reduce using rule 5 (expr)
+
+
+state 4
+
+    4 comando: VAR . RECEBE expr
+    6 expr: VAR .
+
+    RECEBE  shift, and go to state 8
+
+    $default  reduce using rule 6 (expr)
+
+
+state 5
+
+   11 expr: ABRE . expr FECHA
+
+    NUM   shift, and go to state 3
+    VAR   shift, and go to state 9
+    ABRE  shift, and go to state 5
+
+    expr  go to state 10
+
+
+state 6
+
+    1 linha: linha comando . ENTER
+
+    ENTER  shift, and go to state 11
+
+
+state 7
+
+    3 comando: expr .
+    7 expr: expr . MAIS expr
+    8     | expr . MENOS expr
+    9     | expr . VEZES expr
+   10     | expr . DIV expr
+
+    MAIS   shift, and go to state 12
+    MENOS  shift, and go to state 13
+    VEZES  shift, and go to state 14
+    DIV    shift, and go to state 15
+
+    $default  reduce using rule 3 (comando)
+
+
+state 8
+
+    4 comando: VAR RECEBE . expr
+
+    NUM   shift, and go to state 3
+    VAR   shift, and go to state 9
+    ABRE  shift, and go to state 5
+
+    expr  go to state 16
+
+
+state 9
+
+    6 expr: VAR .
+
+    $default  reduce using rule 6 (expr)
+
+
+state 10
+
+    7 expr: expr . MAIS expr
+    8     | expr . MENOS expr
+    9     | expr . VEZES expr
+   10     | expr . DIV expr
+   11     | ABRE expr . FECHA
+
+    MAIS   shift, and go to state 12
+    MENOS  shift, and go to state 13
+    VEZES  shift, and go to state 14
+    DIV    shift, and go to state 15
+    FECHA  shift, and go to state 17
+
+
+state 11
+
+    1 linha: linha comando ENTER .
+
+    $default  reduce using rule 1 (linha)
+
+
+state 12
+
+    7 expr: expr MAIS . expr
+
+    NUM   shift, and go to state 3
+    VAR   shift, and go to state 9
+    ABRE  shift, and go to state 5
+
+    expr  go to state 18
+
+
+state 13
+
+    8 expr: expr MENOS . expr
+
+    NUM   shift, and go to state 3
+    VAR   shift, and go to state 9
+    ABRE  shift, and go to state 5
+
+    expr  go to state 19
+
+
+state 14
+
+    9 expr: expr VEZES . expr
+
+    NUM   shift, and go to state 3
+    VAR   shift, and go to state 9
+    ABRE  shift, and go to state 5
+
+    expr  go to state 20
+
+
+state 15
+
+   10 expr: expr DIV . expr
+
+    NUM   shift, and go to state 3
+    VAR   shift, and go to state 9
+    ABRE  shift, and go to state 5
+
+    expr  go to state 21
+
+
+state 16
+
+    4 comando: VAR RECEBE expr .
+    7 expr: expr . MAIS expr
+    8     | expr . MENOS expr
+    9     | expr . VEZES expr
+   10     | expr . DIV expr
+
+    MAIS   shift, and go to state 12
+    MENOS  shift, and go to state 13
+    VEZES  shift, and go to state 14
+    DIV    shift, and go to state 15
+
+    $default  reduce using rule 4 (comando)
+
+
+state 17
+
+   11 expr: ABRE expr FECHA .
+
+    $default  reduce using rule 11 (expr)
+
+
+state 18
+
+    7 expr: expr . MAIS expr
+    7     | expr MAIS expr .
+    8     | expr . MENOS expr
+    9     | expr . VEZES expr
+   10     | expr . DIV expr
+
+    VEZES  shift, and go to state 14
+    DIV    shift, and go to state 15
+
+    $default  reduce using rule 7 (expr)
+
+
+state 19
+
+    7 expr: expr . MAIS expr
+    8     | expr . MENOS expr
+    8     | expr MENOS expr .
+    9     | expr . VEZES expr
+   10     | expr . DIV expr
+
+    VEZES  shift, and go to state 14
+    DIV    shift, and go to state 15
+
+    $default  reduce using rule 8 (expr)
+
+
+state 20
+
+    7 expr: expr . MAIS expr
+    8     | expr . MENOS expr
+    9     | expr . VEZES expr
+    9     | expr VEZES expr .
+   10     | expr . DIV expr
+
+    $default  reduce using rule 9 (expr)
+
+
+state 21
+
+    7 expr: expr . MAIS expr
+    8     | expr . MENOS expr
+    9     | expr . VEZES expr
+   10     | expr . DIV expr
+   10     | expr DIV expr .
+
+    $default  reduce using rule 10 (expr)
