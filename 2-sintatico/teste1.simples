@@ -1,0 +1,9 @@
+programa teste
+/* Este é um programa exemplo
+    da linguagem simples */
+    inteiro a b
+inicio
+    leia a
+    b <- a * 10
+    escreva b
+fimprograma
